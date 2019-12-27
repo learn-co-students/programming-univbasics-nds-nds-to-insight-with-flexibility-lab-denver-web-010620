@@ -1,10 +1,12 @@
 # Provided, don't edit
 require 'directors_database'
+require 'pp'
 
 # A method we're giving you. This "flattens"  Arrays of Arrays so: [[1,2],
 # [3,4,5], [6]] => [1,2,3,4,5,6].
 
 def flatten_a_o_a(aoa)
+  #Take array aoa and returns array result
   result = []
   i = 0
 
@@ -21,7 +23,8 @@ def flatten_a_o_a(aoa)
 end
 
 def movie_with_director_name(director_name, movie_data)
-  { 
+  #returns a has of data for a movie and director name in a hash
+  {
     :title => movie_data[:title],
     :worldwide_gross => movie_data[:worldwide_gross],
     :release_year => movie_data[:release_year],
@@ -48,6 +51,13 @@ def movies_with_director_key(name, movies_collection)
   # Array of Hashes where each Hash represents a movie; however, they should all have a
   # :director_name key. This addition can be done by using the provided
   # movie_with_director_name method
+  movies_with_directors_name = []
+
+  for i in 0...movies_collection.length
+    movies_with_directors_name.push(movie_with_director_name(name, movies_collection[i]))
+  end
+
+  return movies_with_directors_name
 end
 
 
@@ -63,6 +73,24 @@ def gross_per_studio(collection)
   #
   # Hash whose keys are the studio names and whose values are the sum
   # total of all the worldwide_gross numbers for every movie in the input Hash
+  studios_totals = {}
+  studio_name = ""
+  movie_gross = 0
+  movie = {}
+
+  for i in 0...collection.length
+    movie = collection[i]
+    studio_name = collection[i][:studio]
+    movie_gross = collection[i][:worldwide_gross]
+
+    if studios_totals[studio_name] then
+      studios_totals[studio_name] = studios_totals[studio_name] + movie_gross
+    else
+      studios_totals[studio_name] = movie_gross
+    end
+  end
+
+  return studios_totals
 end
 
 def movies_with_directors_set(source)
@@ -76,6 +104,17 @@ def movies_with_directors_set(source)
   #
   # Array of Arrays containing all of a director's movies. Each movie will need
   # to have a :director_name key added to it.
+  movies_with_directors = []
+  director_name = ""
+  director_movies = []
+
+  for i in 0...source.length
+    director_name = source[i][:name]
+    director_movies = source[i][:movies]
+    movies_with_directors[i] = movies_with_director_key(director_name, director_movies)
+  end
+
+  return movies_with_directors
 end
 
 # ----------------    End of Your Code Region --------------------
